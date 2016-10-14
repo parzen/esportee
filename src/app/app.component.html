@@ -1,3 +1,20 @@
-<h1>
-  {{title}}
-</h1>
+<header>
+
+  <md-toolbar color="primary">
+    <span>esportee</span>
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-remaining-space"></span>
+    <button md-button routerLink="/games">Games</button>
+    <button md-button routerLink="/tournaments">Tournaments</button>
+    <button md-button routerLink="/streams">Streams</button>
+    <button md-button routerLink="/profile">Register</button>
+  </md-toolbar>
+
+</header>
+<main>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+<footer>
+</footer>

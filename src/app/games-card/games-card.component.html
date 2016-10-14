@@ -1,0 +1,20 @@
+<div class="card grey lighten-5">
+  <div class="card-image waves-effect waves-block waves-light">
+
+  </div>
+  <div class="card-image">
+    <img src="{{model.coverImageUrl}}" alt="{{model.imgCap}}">
+  </div>
+  <div class="card-content">
+    <p>
+      <span class="grey-text text-darken-4 card-title">{{model.title}}</span>&nbsp;&nbsp;
+      <span class="grey-text text-darken-1">{{model.subTitle}}</span>
+    </p>
+    <p>{{model.description}}</p>
+  </div>
+  <div class="card-action"><a href="#">Create A Tournament</a></div>
+  <div class="card-action"><a href="#">Show Tournaments</a></div>
+  <div class="card-action"><a href="#">Show Streams</a></div>
+  <div *ngFor="let link of model.links" class="card-action"><a href="#">{{link.text}}</a></div>
+</div>
+

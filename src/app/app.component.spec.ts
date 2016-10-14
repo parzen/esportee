@@ -1,33 +1,33 @@
-/* tslint:disable:no-unused-variable */
+/// <reference path="../../typings/globals/jasmine/index.d.ts" />
 
-import { TestBed, async } from '@angular/core/testing';
+import {
+  it,
+  inject,
+  beforeEachProviders
+} from '@angular/core/testing';
+
+// to use Translate Service, we need Http, and to test Http we need to mock the backend
+import { BaseRequestOptions, Http } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
+import { provide } from '@angular/core';
+
+// Load the implementations that should be tested
+import { ApiService } from './shared';
 import { AppComponent } from './app.component';
 
-describe('App: EsporteeClientNg2', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-    });
-  });
-
-  it('should create the app', async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
-    let app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
-
-  it(`should have as title 'app works!'`, async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
-    let app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app works!');
-  }));
-
-  it('should render title in a h1 tag', async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    let compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('app works!');
-  }));
+describe('App', () => {
+  // provide our implementations or mocks to the dependency injector
+  beforeEachProviders(() => [
+    AppComponent,
+    ApiService,
+    BaseRequestOptions,
+    MockBackend,
+    // Provide a mocked (fake) backend for Http
+    provide(Http, {
+      useFactory: function useFactory(backend, defaultOptions) {
+        return new Http(backend, defaultOptions);
+      },
+      deps: [MockBackend, BaseRequestOptions]
+    })
+  ]);
 });

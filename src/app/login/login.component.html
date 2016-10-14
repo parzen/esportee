@@ -1,0 +1,25 @@
+<h2 class="grey-text text-darken-2">Login</h2>
+<div class="row">
+  <form class="col s12" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="email" type="email" name="email" class="validate" required [(ngModel)]="model.email">
+        <label for="email">Email</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="pass" type="password" name="password" class="validate" required [(ngModel)]="model.password">
+        <label for="pass">Password</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col m12 s12">
+        <p class="right-align">
+          <button class="btn btn-large waves-effect waves-light" type="submit" name="login">Login
+          </button>
+        </p>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<div *ngIf="!isLoggedIn()">
+  <div class="row">
+    <div class="col s12 m8 l6">
+      <login-form></login-form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m8 l6">
+      <register-form></register-form>
+    </div>
+  </div>
+</div>
+<div *ngIf="isLoggedIn()">
+  <button (click)="logOut()">Logout</button>
+</div>
