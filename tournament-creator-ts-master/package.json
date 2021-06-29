@@ -1,0 +1,34 @@
+{
+  "name": "tournament-creator-ts",
+  "version": "0.0.6",
+  "description": "Utility to create tournaments",
+  "main": "./build/index.js",
+  "scripts": {
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/strangematter/tournament-creator-ts.git"
+  },
+  "author": "Adrian Tomasek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/strangematter/tournament-creator-ts/issues"
+  },
+  "homepage": "https://github.com/strangematter/tournament-creator-ts#readme",
+  "dependencies": {
+    "seedrandom": "^2.4.3"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.45",
+    "@types/karma": "^1.7.2",
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-mocha-reporter": "^2.0.0",
+    "karma-typescript": "^3.0.9",
+    "typescript": "^2.8.1"
+  }
+}

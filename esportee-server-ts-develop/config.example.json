@@ -1,0 +1,48 @@
+{
+  "development": {
+    "appRoot": "http://localhost:4200",
+    "env": "development",
+    "jwt-secret": "vg!HIWek7n1fwFebch2&U^7D%P2",
+    "recaptcha": {
+      "publicKey": "INSERT_YOUR_KEY",
+      "privateKey": "INSERT_YOUR_KEY"
+    },
+    "aws": {
+      "accessKeyId": "INSERT_YOUR_ID",
+      "secretAccessKey": "INSERT_YOUR_KEY",
+      "region": "INSERT_YOUR_REGION"
+    },
+    "firebase": {
+      "apiKey": "INSERT_YOUR_KEY",
+      "authDomain": "INSERT_YOURS",
+      "databaseURL": "INSERT_YOURS",
+      "projectId": "INSERT_YOURS",
+      "storageBucket": "INSERT_YOURS",
+      "messagingSenderId": "INSERT_YOURS"
+    },
+    "salt": "jgtFV5v^q4@e61xjOJ0L^mSBZ2$"
+  },
+  "production": {
+    "appRoot": "http://localhost:4200",
+    "env": "production",
+    "jwt-secret": "vg!HIWek7n1fwFebch2&U^7D%P2",
+    "recaptcha": {
+      "publicKey": "INSERT_YOUR_KEY",
+      "privateKey": "INSERT_YOUR_KEY"
+    },
+    "aws": {
+      "accessKeyId": "INSERT_YOUR_ID",
+      "secretAccessKey": "INSERT_YOUR_KEY",
+      "region": "INSERT_YOUR_REGION"
+    },
+    "firebase": {
+      "apiKey": "INSERT_YOUR_KEY",
+      "authDomain": "INSERT_YOURS",
+      "databaseURL": "INSERT_YOURS",
+      "projectId": "INSERT_YOURS",
+      "storageBucket": "INSERT_YOURS",
+      "messagingSenderId": "INSERT_YOURS"
+    },
+    "salt": "jgtFV5v^q4@e61xjOJ0L^mSBZ2$"
+  }
+}

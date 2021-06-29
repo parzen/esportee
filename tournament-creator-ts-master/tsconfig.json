@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "outDir": "build/",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": ["./src/**/*"]
+}
