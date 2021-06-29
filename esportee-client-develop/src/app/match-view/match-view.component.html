@@ -1,0 +1,15 @@
+<div *ngIf="match">
+  <mat-card>
+    <mat-card-title>{{match.stage.config.name}}, {{match.stage.name}}, Round {{match.round + 1}}</mat-card-title>
+    <match-form
+      [match]="match"
+      [updatedSuccessfully]="updatedSuccessfully"
+      (update)="onUpdate($event)"
+      (updateAndBack)="onUpdateAndBack($event)"
+      (approve)="onApprove($event)"
+      (approveAndBack)="onApproveAndBack($event)"
+      (back)="onBack($event)"
+      (dispute)="onDispute($event)">
+    </match-form>
+  </mat-card>
+</div>

@@ -1,0 +1,101 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+
+<div *ngIf="team">
+  <div *ngIf="!editing">
+      <h2>{{team.name}}</h2>
+      <button *ngIf="isAdmin" mat-raised-button (click)="onEditing()">
+        <i class="material-icons left">edit</i>
+        edit
+      </button>
+  </div>
+  <div *ngIf="editing && isAdmin">
+    <form class="edit-teamname">
+      <mat-form-field>
+        <input type="text" placeholder="Team name" matInput name="" [formControl]="teamNameFormControl">
+        <mat-error *ngIf="teamNameFormControl.hasError('whitespace')">
+          Please enter a valid team name
+        </mat-error>
+      </mat-form-field>
+      <button mat-button mat-raised-button color="primary"
+              [disabled]="!teamNameFormControl.valid || teamNameFormControl.value == team.name"
+              (click)="onUpdateTeamName(teamNameFormControl.value, teamNameFormControl.valid)">
+        Save
+      </button>
+      <button mat-button mat-raised-button color="primary"
+              (click)="onBack()">
+        Cancel
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="isAdmin">
+    <div class="row">
+      <h4>Invitations</h4>
+    </div>
+    <mat-card class="form-card">
+      <mat-card-content>
+        <invitations
+          [teamId]="team.id"
+          [invitationType]="invitationType">
+        </invitations>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="row">
+    <h4>Tournament history</h4>
+  </div>
+  <mat-card class="form-card">
+    <mat-card-content>
+      <div *ngIf="participantStats">
+        <div *ngFor="let participantStat of participantStats">
+          <a (click)="goToTournament(participantStat.tournamentConfig.id)">{{participantStat.rank}}. place in {{participantStat.tournamentConfig.name}}</a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="row">
+    <h4>Team member</h4>
+  </div>
+  <mat-card class="form-card">
+    <mat-card-content>
+      <div *ngFor="let teammember of activeMembers">
+        <a (click)="goToUser(teammember.user.id)">{{teammember.user.username}}</a>
+        <button *ngIf="isAdmin" mat-icon-button color="warn" (click)="teammember.wantToRemove = !teammember.wantToRemove">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <div *ngIf="teammember.wantToRemove">
+          Realy want to remove teammember?
+          <button mat-button color="warn" (click)="onRemove(teammember.id); teammember.wantToRemove = !teammember.wantToRemove">
+            yes
+          </button>
+          <button mat-button color="primary" (click)="teammember.wantToRemove = !teammember.wantToRemove">
+            no
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="row">
+    <h4>Former team member</h4>
+  </div>
+  <div *ngIf="updatedSuccessfully" class="alert alert-success box-msg" role="alert">
+    You have successfully send a rejoin invitation.
+  </div>
+  <mat-card class="form-card">
+    <mat-card-content>
+      <div *ngFor="let teammember of formerMembers">
+        <a (click)="goToUser(teammember.user.id)">{{teammember.user.username}}</a>
+        <button *ngIf="isAdmin" mat-raised-button (click)="sendRejoinInvitation(teammember)">
+          send rejoin invitation
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

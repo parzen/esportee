@@ -1,0 +1,299 @@
+.title
+  font-size: 2em
+
+.settings-stagepreview-wrapper
+  display: flex
+  flex-direction: row
+
+  @media screen and (max-width: 1089px)
+    flex-direction: column
+    align-items: center
+
+  @media screen and (min-width: 1090px)
+    flex-direction: row
+
+.stages-header-container
+  margin-top: 32px
+  display: flex
+
+  h2
+    flex: 1
+
+.tournament-container
+  display: flex
+  align-items: center
+  flex-direction: column
+
+.tournament-form-content
+  width: 100%
+
+.form-card
+  margin-top: 8px
+
+.stage-type-spinner
+  width: 100%
+  margin-bottom: 16px
+  margin-top: 16px
+  font-weight: bold
+
+.create-tournament
+  padding: 8px 32px
+  font-weight: bold
+
+.number-participants
+  font-size: 2em
+  text-align: right
+
+.participants-icon
+  color: #cccccc
+  font-size: 2em
+
+.info
+  display: flex
+  background-color: #eee
+  padding: 16px 32px
+  border: 2px solid #e3e3e3
+  vertical-align: center
+
+.info-light
+  font-weight: bold
+  color: #666
+  display: flex
+  vertical-align: center
+
+.participants-info
+  padding: 16px 32px
+
+.icon-info-box
+  font-size: 2em
+  color: #ccc
+
+.text-info-box
+  margin-left: 16px
+  margin-top: 6px
+  margin-bottom: 8px
+
+.grey-box
+  border-radius: 6px
+  background-color: #eee
+  align-content: center
+  flex-grow: 2
+  border: 2px solid #eee
+  padding: 16px
+  height: 160px
+  margin: 4px
+  width: 322px
+
+  .content
+    padding: 8px
+
+  .title
+    font-size: 1.2em
+
+  .stages-empty-text
+    font-size: 1.2em
+    font-weight: bold
+
+  .stages-empty
+    text-align: center
+    color: #ccc
+    height: 100%
+    margin-top: 8px
+    text-wrap: normal
+    padding: 16px
+    font-size: 1.8em
+
+    mat-icon
+      width: 100%
+      text-align: center
+      margin-top: 10px
+      font-size: 64px
+
+.tournament-title-container
+  min-width: 300px
+  width: 100%
+
+.general-settings-container
+  display: flex
+  flex-direction: row
+
+.settings-wrapper
+  display: flex
+  flex-direction: column
+
+.tournament-title-container
+  font-size: 2em
+
+.participants
+  align-self: flex-end
+
+  .participants-input-container
+    mat-form-field
+      width: 120px
+      margin-right: 32px
+
+.title-container
+  display: flex
+  flex-wrap: wrap
+  flex: 1
+  margin-right: 32px
+
+.tournament-save-container
+  display: flex
+  justify-content: flex-end
+
+.stages-configurator-container
+  display: flex
+  flex-wrap: wrap
+
+  @media screen and (max-width: 900px)
+    flex-direction: column
+    align-items: center
+
+  @media screen and (min-width: 901px)
+    flex-direction: row
+
+  .stages-container
+    margin-top: 48px
+
+    .stages-container-header
+      display: flex
+      flex-direction: row
+
+  .stage-list
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    align-items: baseline
+    flex: 1
+
+    .arrow-container
+      width: 100%
+      margin-left: 50px
+      text-align: center
+      font-size: 3em
+      color: #ccc
+
+    .third-place-checkbox
+      padding-bottom: 16px
+
+    .stage-entry-container
+      display: flex
+
+      .stage-entry
+        padding: 4px 2px 8px 16px
+        background-color: #fafafa
+        margin-bottom: 0px
+        border-radius: 4px
+        border: 1px solid #eaeaea
+
+        .stage-entry-remove
+          color: #e3e3e3
+          width: 36px
+          height: 36px
+          padding-top: 8px
+          text-align: center
+          cursor: pointer
+          &:hover
+            color: #c3c3c3
+
+        @media screen and (max-width: 900px)
+          width: 100%
+
+        .stage-entry-wrapper
+          display: flex
+          width: 400px
+          justify-content: space-between
+
+          .stage-number-participants-container
+            max-width: 100px
+            margin-right: 12px
+            margin-left: 24px
+
+            .participants-label
+              margin-bottom: 16px
+
+            input
+              text-align: right
+
+          .stage-type-spinner
+            font-size: 1.4em
+            width: 250px
+            margin-top: 16px
+            padding: 6px
+
+        .advanced-wrapper
+          display: flex
+          flex-direction: column
+          text-align: left
+          width: 380px
+          padding-bottom: 16px
+
+          .stage-error-container
+            display: flex
+            flex-direction: column
+
+            .stage-error
+              background-color: #C21F39
+              color: #ffffff
+              border-radius: 2px
+              margin-right: 16px
+              margin-top: 8px
+              padding: 8px
+
+          .stage-entry-advanced-toggle
+            text-align: left
+
+          .checkbox-third-place-match
+            margin-left: 8px
+            margin-bottom: 16px
+
+          .advanced-items-container
+            margin: 16px 32px 8px 32px
+            display: flex
+            align-items: baseline
+
+            .stage-nr-legs-container
+              max-width: 100px
+              margin-left: 16px
+
+            .stage-nr-groups-container
+              max-width: 100px
+
+.tournament-preview
+  padding: 16px
+
+  @media screen and (min-width: 901px)
+    flex: 1
+    margin-left: 32px
+
+.tournament-header-container
+  width: 670px
+  display: flex
+  align-items: center
+
+  @media screen and (max-width: 1089px)
+    margin: 0 auto
+
+.participant-type-options, .network-type-options
+  display: flex
+  align-items: center
+
+  .team-tournament-option, .user-tournament-option, .online-option, .offline-option
+    display: flex
+    align-items: center
+    width: 180px
+    margin-right: 16px
+    font-size: 1.4em
+    color: #333
+    padding: 16px 16px
+    background-color: #fafafa
+    border-radius: 4px
+    border: 1px solid #eaeaea
+    &:hover
+      cursor: pointer
+      background-color: #f3f3f3
+
+  .selected
+    background-color: #f3f3f3
+    border: 1px solid #dadada

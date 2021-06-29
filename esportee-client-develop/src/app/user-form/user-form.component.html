@@ -1,0 +1,27 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+<form class="user-form" [formGroup]="userFormControl">
+  <mat-form-field class="user-form-full-width">
+    <input matInput type="text" formControlName="username" placeholder="username">
+    <mat-error *ngIf="userFormControl.get('username').errors && userFormControl.get('username').touched">
+      Username is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="user-form-full-width">
+    <input matInput type="email" formControlName="email" placeholder="email">
+    <mat-error *ngIf="userFormControl.get('email').errors && userFormControl.get('email').touched">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <div class="button-user-container">
+    <button mat-button mat-raised-button color="primary" [disabled]="!userFormControl.valid" (click)="onEditUser(userFormControl.value, userFormControl.valid)">
+      <mat-icon class="material-icons">edit</mat-icon>
+      Edit
+    </button>
+  </div>
+</form>

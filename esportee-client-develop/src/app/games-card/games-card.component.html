@@ -1,0 +1,19 @@
+<mat-card class="grey lighten-4">
+  <mat-card-title>{{model.title}}</mat-card-title>
+  <mat-card-subtitle>{{model.subTitle}}</mat-card-subtitle>
+  <img *ngIf="toCreate" src="{{model.coverImageUrl}}" (click)="createTournament()" alt="{{model.imgCap}}"
+       mat-card-image>
+  <img *ngIf="!toCreate" src="{{model.coverImageUrl}}" (click)="navigateToTournaments()" alt="{{model.imgCap}}"
+       mat-card-image>
+  <mat-card-content *ngIf="toCreate">
+    <p>{{model.description}}</p>
+  </mat-card-content>
+  <mat-card-actions *ngIf="toCreate">
+    <button color="primary" mat-button (click)="createTournament()">
+      CREATE TOURNAMENT
+    </button>
+    <button color="secondary" mat-button (click)="navigateToTournaments()">
+      LIST TOURNAMENTS
+    </button>
+  </mat-card-actions>
+</mat-card>

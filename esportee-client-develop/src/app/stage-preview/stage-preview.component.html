@@ -1,0 +1,15 @@
+<div *ngIf="stage">
+     <ul class="collection with-header">
+        <h4>{{stage.name}} ({{nrMatches}} matches)</h4>
+        <ul class="collection with-header">
+         <li *ngFor="let previewElement of previewArray">
+            <div class="preview-group">
+            <h5>{{previewElement.name}}</h5>
+             <span *ngFor="let groupmember of previewElement.item; let index = index">
+                <h5>{{index+1}}. {{groupmember}}</h5>
+            </span> 
+            </div>
+        </li> 
+        </ul>
+    </ul> 
+</div>

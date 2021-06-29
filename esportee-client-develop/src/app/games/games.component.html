@@ -1,0 +1,16 @@
+<div class="games-content">
+  <h1>All Games</h1>
+  <div *ngIf="loading | async">
+    <div class="progress">
+      <div class="indeterminate"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="!(loading | async)" class="games-container">
+      <my-games-card *ngFor="let game of games" class="game-card"
+                     [model]=(game|myGameToCardModel)
+                     [toCreate]=true></my-games-card>
+
+    </div>
+  </div>
+</div>

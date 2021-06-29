@@ -1,0 +1,17 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+
+<invitation-form
+  [invitationType]="invitationType"
+  [lastInvitationTokenSaved]="lastInvitationTokenSaved"
+  (createInvitation)="onCreateInvitation($event)">
+</invitation-form>
+
+<invitation-list-view
+  [invitationList]="invitationList"
+  [nrInvitations]="nrInvitations"
+  (remove)="onInvitationRemove($event)">
+</invitation-list-view>

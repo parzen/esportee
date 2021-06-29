@@ -1,0 +1,38 @@
+<mat-card class="card-login">
+  <mat-card-content>
+    <h2>Login to your account</h2>
+    <div class='row'>
+      <form class="col s12" method="post" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <mat-form-field type="email">
+            <input matInput type='email' name='email' id='email' required [(ngModel)]="model.email"
+                   placeholder="Email address">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field type="password">
+            <input matInput class='validate' type='password' name='password' id='password' required
+                   placeholder="Password"
+                   [(ngModel)]="model.password"/>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <button mat-button style='float: right;'>
+            Forgot Password?
+          </button>
+        </div>
+        <div class="row">
+          <button class="login-button" mat-raised-button color="primary" type='submit' name='login'
+                  class='col s12 btn btn-large waves-effect indigo'>Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="back-to-signup-container">
+  Don't have an account yet? Then <a routerLink="/signup">signup</a> for free!
+</div>
+

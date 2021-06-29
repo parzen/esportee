@@ -1,0 +1,31 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+<form class="add-invitation-form">
+  <mat-form-field class="add-invitation-form-full-width">
+    <input type="email" placeholder="{{ type }}" matInput aria-label="Choose" name="" [formControl]="invitationFormControl" [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{ option }}
+        </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="invitationFormControl.hasError('email')">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="invitationFormControl.hasError('whitespace')">
+      Please enter a valid {{ type | lowercase }}
+    </mat-error>
+    <mat-error *ngIf="invitationFormControl.hasError('required')">
+      {{ type }} is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <button mat-button mat-raised-button color="primary"
+          [disabled]="!invitationFormControl.valid"
+          (click)="onInvitationAdd(invitationFormControl.value, invitationFormControl.valid)">
+    <mat-icon *ngIf="type == 'Team name'" class="material-icons">group_add</mat-icon>
+    <mat-icon *ngIf="type == 'Email'" class="material-icons">person_add</mat-icon>
+    Send invitation
+  </button>
+</form>

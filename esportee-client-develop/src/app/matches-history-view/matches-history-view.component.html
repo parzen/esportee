@@ -1,0 +1,7 @@
+<div *ngIf="matches">
+  <div *ngFor="let match of matches">
+    <a routerLink="/match/{{match.id}}">
+      {{match.opponents[0].user.username}} - {{match.opponents[1].user.username}} {{match.opponents[0].score}} : {{match.opponents[1].score}}
+    </a>
+  </div>
+</div>

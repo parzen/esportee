@@ -1,0 +1,61 @@
+<header>
+  <mat-toolbar class="main-nav" md-colors="::{background: '#ffffff'}">
+    <div class="logo"><a routerLink="">esportee</a></div>
+    <button mat-button routerLink="/games" routerLinkActive="active">Games</button>
+    <button mat-button routerLink="/tournaments" routerLinkActive="active">Tournaments</button>
+    <button mat-button routerLink="/streams" routerLinkActive="active">Streams</button>
+    <span class="fill-remaining-space"></span>
+    <button *ngIf="!(loggedIn | async)" mat-button routerLink="/signup">
+      Signup
+    </button>
+    <button *ngIf="!(loggedIn | async)" mat-button routerLink="/login">
+      <mat-icon>lock</mat-icon>&nbsp;Login
+    </button>
+    <button mat-button
+            *ngIf="(loggedIn | async) && (notifications | async) != null && (notifications | async).length > 0"
+            [matMenuTriggerFor]="notificationsMenu">
+      <mat-icon matBadge="{{(notifications | async).length}}" matBadgePosition="above after" class="mat-24">
+        notifications
+      </mat-icon>&nbsp;
+    </button>
+    <mat-menu yPosition="below" overlapTrigger="false" class="notifications-menu" #notificationsMenu="matMenu">
+      <div class="notification" *ngFor="let notification of (notifications | async)">
+        <div class="notification-title">{{notification.title}}</div>
+        <div class="notification-body">{{notification.message}}</div>
+        <div *ngIf="notification.actions" class="notification-actions">
+          <button mat-flat-button *ngFor="let action of notification.actions" (click)="action.onFired()">
+            {{action.title}}
+          </button>
+        </div>
+      </div>
+    </mat-menu>
+    <button mat-button routerLink="/profile" routerLinkActive="active" *ngIf="loggedIn | async">
+      <mat-icon class="mat-24 profile-button-icon">account_circle</mat-icon>&nbsp;
+      <span class="profile-button-label">{{(user | async)?.username}}</span>
+    </button>
+  </mat-toolbar>
+</header>
+<main>
+  <router-outlet name="full-width-pane"></router-outlet>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+<footer>
+  <div class="content">
+    <ul class="footer-nav">
+      <li>
+        <a href="/">legal</a>
+      </li>
+      <li>
+        <a href="/">stuff</a>
+      </li>
+      <li>
+        <a href="/">goes</a>
+      </li>
+      <li>
+        <a href="/">here</a>
+      </li>
+    </ul>
+  </div>
+</footer>

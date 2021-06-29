@@ -1,0 +1,21 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+<form class="add-team-form">
+  <mat-form-field class="add-team-form-full-width">
+    <input type="text" placeholder="Team name" matInput name="" [formControl]="teamFormControl">
+    <mat-error *ngIf="teamFormControl.hasError('required')">
+      Team name is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <div class="button-create-team-container">
+    <button mat-button mat-raised-button color="primary"
+            [disabled]="!teamFormControl.valid"
+            (click)="onTeamCreate(teamFormControl.value, teamFormControl.valid)">
+      <mat-icon class="material-icons">people</mat-icon>
+      Create team
+    </button>
+  </div>
+</form>

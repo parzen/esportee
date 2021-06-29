@@ -1,0 +1,78 @@
+<div *ngIf="match">
+  <mat-card-content>
+    <div class="form-group row">
+          <span *ngFor="let opponent of match.opponents; let i = index; let isLast = last">
+              <ng-container
+                *ngIf="i % 2 == 0; then parsePaticipant; else parseScore">
+              </ng-container>
+              <ng-container
+                *ngIf="i % 2 == 0; then parseScore; else parsePaticipant">
+              </ng-container>
+              
+              <ng-template #parsePaticipant>
+                <span *ngIf="opponent.user || opponent.team; else noparticipant" class="opponent">
+                  <a routerLink="/team/{{opponent.team.id}}" *ngIf="opponent.team">{{opponent.team.name}}</a>
+                  <a routerLink="/user/{{opponent.user.id}}" *ngIf="opponent.user">{{opponent.user.username}}</a>
+                </span>
+                <ng-template #noparticipant>TBD</ng-template>
+              </ng-template>
+
+              <ng-template #parseScore>
+                  <mat-form-field *ngIf="match.status === MatchState.PENDING || match.status === MatchState.DISPUTED; else resultPresent"
+                                  [ngClass]="[ i % 2 == 0 ? 'score leftone' : 'score rightone' ]">
+                  <input matInput
+                        min="0"
+                        type="number"
+                        name="opponent.score"
+                        required
+                        (ngModelChange)="validate(opponent.score, i)"
+                        [(ngModel)]="opponent.score">
+                  </mat-form-field>
+                  <ng-template #resultPresent>
+                    <span [ngClass]="[ i % 2 == 0 ? 'score leftone' : 'score rightone' ]">{{opponent.score}}</span>
+                  </ng-template>
+                  <mat-error *ngIf="errors[i]">
+                      {{ errors[i] }}
+                  </mat-error>
+                  <span *ngIf="!isLast" [style.font-size.em]="'2'"> : </span>
+              </ng-template>
+          </span>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button mat-raised-button color="primary"
+            type="submit" (click)="handleBack()">
+      <mat-icon class="material-icons">arrow_back</mat-icon>
+      Back
+    </button>
+    <button *ngIf="match.status === MatchState.PENDING || match.status === MatchState.DISPUTED" mat-button mat-raised-button color="primary"
+            type="submit" (click)="handleSubmit()" [disabled]="nrErrors>0 || !allParticipantsPresent">
+      <mat-icon class="material-icons">save</mat-icon>
+      Update match
+    </button>
+    <button *ngIf="match.status === MatchState.PENDING || match.status === MatchState.DISPUTED" mat-button mat-raised-button color="primary"
+            type="submit" (click)="handleSubmitAndBack()" [disabled]="nrErrors>0 || !allParticipantsPresent">
+      <mat-icon class="material-icons">save</mat-icon>
+      Update match and back
+    </button>
+    <button *ngIf="match.status === MatchState.WAITING_FOR_REPLY" mat-button mat-raised-button color="primary"
+            type="submit" (click)="handleApprove()" [disabled]="nrErrors>0 || !allParticipantsPresent">
+      <mat-icon class="material-icons">save</mat-icon>
+      Approve result
+    </button>
+    <button *ngIf="match.status === MatchState.WAITING_FOR_REPLY" mat-button mat-raised-button color="primary"
+      type="submit" (click)="handleApproveAndBack()" [disabled]="nrErrors>0 || !allParticipantsPresent">
+    <mat-icon class="material-icons">save</mat-icon>
+      Approve result and back
+    </button>
+    <button *ngIf="match.status === MatchState.WAITING_FOR_REPLY" mat-button mat-raised-button color="warn"
+      type="submit" (click)="handleDispute()" [disabled]="nrErrors>0 || !allParticipantsPresent">
+    <mat-icon class="material-icons">cancel</mat-icon>
+      Dispute result
+    </button>
+    <div *ngIf="updatedSuccessfully" class="alert alert-success box-msg" role="alert">
+      Your changes has been updated.
+    </div>
+  </mat-card-actions>
+</div>

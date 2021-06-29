@@ -1,0 +1,31 @@
+<div class="content" style="margin-top: 48px;">
+  <div *ngIf="gameId">
+    <h1 *ngIf="game">{{game.title}} tournaments</h1>
+    <div *ngIf="!tournaments">Loading...</div>
+    <div *ngIf="tournaments">
+      <mat-list style="width: 620px;">
+        <mat-list-item (click)="goToTournament(tournament.id)" class="tournament-item"
+                       *ngFor="let tournament of tournaments">
+          <mat-icon mat-list-icon class="material-icons" *ngIf="tournament.isATeamTournament">people</mat-icon>
+          <mat-icon mat-list-icon class="material-icons" *ngIf="!tournament.isATeamTournament">person</mat-icon>
+          <mat-icon class="material-icons" >navigate_next</mat-icon>
+          <h3 class="tournament-name" matLine>{{tournament.name}}</h3>
+          <div style="margin-top: 8px;" matLine>
+            <div style="margin-top: 2px;margin-right: 4px;"
+              [ngClass]="{'greenDot': tournament.status === 'running','yellowDot': tournament.status === 'pending','blueDot': tournament.status === 'finished'}"></div>
+              {{tournament.status}}
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+  <div *ngIf="!gameId">
+    <div class="row">
+      <div *ngIf="games" class="games-container">
+        <my-games-card *ngFor="let game of games" class="game-card"
+                       [model]=(game|myGameToCardModel)
+                       [toCreate]=false></my-games-card>
+      </div>
+    </div>
+  </div>
+</div>

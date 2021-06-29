@@ -1,0 +1,13 @@
+<div *ngIf="token && email">
+  <div *ngIf="error">
+    <h2>Sorry, please try again!</h2>
+    {{error}}
+  </div>
+  <div *ngIf="success">
+    <h2>Welcome on board!</h2>
+  </div>
+</div>
+<div *ngIf="!(token && email)">
+  The link you clicked seems broken. Generate a new token:
+  TODO
+</div>

@@ -1,0 +1,211 @@
+<div *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+  <div>
+    <span>{{errors['api_error']['critical']}}</span>
+  </div>
+</div>
+
+<div *ngIf="!tournament">Loading...</div>
+<div *ngIf="tournament" class="tournament-view-header">
+  <h1>
+    <mat-icon class="material-icons" *ngIf="tournament.isATeamTournament">people</mat-icon>
+    <mat-icon class="material-icons" *ngIf="!tournament.isATeamTournament">person</mat-icon>
+    {{tournament.name}}
+  </h1>
+  <h2 *ngIf="tournament.participantStats[0]">
+    <mat-icon class="material-icons">star</mat-icon>
+    Winner:&nbsp;
+    <a routerLink="/team/{{tournament.participantStats[0].team.id}}" *ngIf="tournament.participantStats[0].team">{{tournament.participantStats[0].team.name}}</a>
+    <a routerLink="/user/{{tournament.participantStats[0].user.id}}" *ngIf="tournament.participantStats[0].user">{{tournament.participantStats[0].user.username}}</a>
+  </h2>
+  <div *ngIf="tournament.status=='pending' && isAdmin">
+    <button mat-button mat-raised-button color="primary" (click)="onEditTournament()">
+      <mat-icon class="material-icons left">edit</mat-icon>
+      &nbsp;Edit Tournament
+    </button>
+  </div>
+  <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4" dynamicHeight>
+
+    <!-- INVITATION TAB -->
+    <mat-tab *ngIf="tournament.status=='pending' && isAdmin" label="Invitations"> 
+      <mat-card>
+        <invitations
+          [tournamentId]="tournament.id"
+          [invitationType]="invitationType"
+          (updateNrConfirmedInvitations)="onUpdateNrConfirmedInvitation($event)">
+        </invitations>
+
+        <button mat-button mat-raised-button color="primary"
+                (click)="onStartTournamentButton(); tournament.readyToStart = !tournament.readyToStart" [disabled]="notEnoughInvitations || tooManyConfirmedInvitations">
+          <mat-icon class="material-icons left">play_circle_outline</mat-icon>
+          &nbsp;Start tournament
+        </button>
+        <div *ngIf="notEnoughInvitations && !tooManyConfirmedInvitations">
+          <mat-card>
+            <div class="row">
+                <mat-icon class="material-icons">error_outline</mat-icon>
+                Number of confirmed invitations is lower than number for participants! Do you still want to proceed?
+            </div>
+            <button mat-button mat-raised-button color="primary" type="submit" (click)="startTournament(); tournament.readyToStart = !tournament.readyToStart">
+                <mat-icon class="material-icons">done</mat-icon>
+                Yes
+            </button>
+            <button mat-button mat-raised-button color="warn" type="submit" (click)="onDecline(); tournament.readyToStart = !tournament.readyToStart">
+                <mat-icon class="material-icons">clear</mat-icon>
+                No
+            </button>
+          </mat-card>
+        </div>
+        <div *ngIf="tournament.readyToStart && !(notEnoughInvitations && !tooManyConfirmedInvitations)">
+          <mat-card>
+            <div class="row">
+              <mat-icon class="material-icons">error_outline</mat-icon>
+              When starting tournament no changes on tournament can be made anymore. Do you still want to proceed?
+            </div>
+            <button mat-button mat-raised-button color="primary"
+                    (click)="startTournament(); tournament.readyToStart = !tournament.readyToStart">
+              yes
+            </button>
+            <button mat-button mat-raised-button color="warn"
+                    (click)="tournament.readyToStart = !tournament.readyToStart">
+              no
+            </button>
+          </mat-card>
+        </div>
+        <div class="row">
+            <mat-icon class="material-icons">info_outline</mat-icon>
+            {{ invitationInfoText }}
+        </div>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TOURNAMENT INFO TAB -->
+    <mat-tab label="Info"> 
+      <mat-card>
+        <div class="dates-card">
+          <mat-card>
+            <mat-card-header>
+              <div mat-card-avatar>
+                  <mat-icon>schedule</mat-icon>
+              </div>
+              <mat-card-title>Start</mat-card-title>
+              <mat-card-subtitle>{{tournament.startDate | date}}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <div mat-card-avatar>
+                  <mat-icon>timer</mat-icon>
+              </div>
+              <mat-card-title>Check-in From</mat-card-title>
+              <mat-card-subtitle>{{tournament.checkinDateStart | date}}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+          <mat-card>
+            <mat-card-header>
+              <div mat-card-avatar>
+                  <mat-icon>timer_off</mat-icon>
+              </div>
+              <mat-card-title>Check-in Until</mat-card-title>
+              <mat-card-subtitle>{{tournament.checkinDateEnd | date}}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+
+        <mat-card>
+            <p>Status: {{tournament.status}}</p>
+            <p>Mode: {{tournament.isATeamTournament ? 'team' : 'solo'}}
+            <p>Game: {{game?.title}}</p>
+            <p>Type: {{tournament.type}}</p>
+            <p *ngIf="tournament.type == 'offline'">
+              Address: {{tournament.address.street}}, {{tournament.address.zip}} {{tournament.address.city}}, {{tournament.address.state}} {{tournament.address.country}}
+            </p>
+            <p>Admin: <a (click)="goToUser(admin?.id)">{{admin?.username}}</a></p>
+
+            <div *ngIf="registrationOpen && user">
+              <button mat-button mat-raised-button color="primary" (click)="onRegisterForTournament()">
+                <mat-icon class="material-icons left">room_service</mat-icon>
+                &nbsp;Register for tournament
+              </button>
+            </div>
+            <div *ngIf="updatedSuccessfully" class="alert alert-success box-msg" role="alert">
+              You have successfully registered for the tournament.
+            </div>
+        </mat-card>
+
+        <mat-card *ngIf="tournament.status == 'finished'">
+            <h3>Final table:</h3>
+            <table mdSort (mdSortChange)="sortData($event)">
+              <tr>
+                <th mat-sort-header="rank">Rank</th>
+                <th mat-sort-header="participant">Participant</th>
+                <th mat-sort-header="played">played</th>
+                <th mat-sort-header="won">won</th>
+                <th mat-sort-header="draw">draw</th>
+                <th mat-sort-header="lost">lost</th>
+                <th mat-sort-header="for">for</th>
+                <th mat-sort-header="against">against</th>
+                <th mat-sort-header="difference">diff</th>
+                <th mat-sort-header="points">points</th>
+              </tr>
+              <tr *ngFor="let participantStat of tournament.participantStats">
+                  <td>{{participantStat.rank}}</td>
+                  <td *ngIf="participantStat.team"><a routerLink="/team/{{participantStat.team.id}}" >{{participantStat.team.name}}</a></td>
+                  <td *ngIf="participantStat.user"><a routerLink="/user/{{participantStat.user.id}}" >{{participantStat.user.username}}</a></td>
+                  <td>{{participantStat.played}}</td>
+                  <td>{{participantStat.won}}</td>
+                  <td>{{participantStat.draw}}</td>
+                  <td>{{participantStat.lost}}</td>
+                  <td>{{participantStat.for}}</td>
+                  <td>{{participantStat.against}}</td>
+                  <td>{{(participantStat.for - participantStat.against)}}</td>
+                  <td>{{(participantStat.won*3 + participantStat.draw*1)}}</td>
+              </tr>
+            </table>
+          </mat-card>
+
+        <mat-card>
+          <h3>Game settings:</h3>
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let entry of tournament.gameSettings">
+                {{entry.setting}}: {{entry.value}}
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </mat-card>
+    </mat-tab>
+
+    <!-- SCHEDULING TAB -->
+    <mat-tab label="Scheduling"> 
+      <mat-card>
+        <div *ngIf="tournament.status=='pending'">
+          Scheduling is not yet available.
+        </div>
+        <div *ngIf="tournament.status!='pending'">
+          <matches-round-view
+            [tournament]="tournament"
+            [user]=user
+            [participants]=participants
+            [activeInThisTeams]=teams>
+          </matches-round-view>
+          <div *ngFor="let stage of tournament.stageConfigs">
+            <app-stage
+              [stage]="stage"
+              [isATeamTournament]=tournament.isATeamTournament></app-stage>
+          </div>
+        </div>
+      </mat-card>
+    </mat-tab>
+
+    <!-- PARTICIPANTS TAB -->
+    <mat-tab label="Participants">
+      <mat-card>
+        <div class="participant-container">
+          <participant-card *ngFor="let participant of participants" class="participant-card"
+                          [participant]=(participant)>
+          </participant-card>
+        </div>          
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

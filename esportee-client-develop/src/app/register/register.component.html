@@ -1,0 +1,39 @@
+<mat-card class="card-signup">
+  <h2 class="grey-text text-darken-2">Create a new account</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="row-no-margin">
+      <mat-form-field>
+        <input matInput id="reg_email" type="email" placeholder="Email address" name="email" required
+               [(ngModel)]="model.email"/>
+      </mat-form-field>
+    </div>
+    <div class="row-no-margin">
+      <mat-form-field>
+        <input matInput placeholder="Username" id="reg_username" type="text" name="username" required
+               [(ngModel)]="model.username"/>
+      </mat-form-field>
+    </div>
+    <div class="row-no-margin">
+      <mat-form-field>
+        <input matInput id="reg_pass" type="password" name="password" placeholder="Password" required
+               [(ngModel)]="model.password">
+      </mat-form-field>
+    </div>
+    <div class="row-no-margin">
+      <p class="right-align">
+        <button mat-raised-button color="primary" type="submit" name="signup">Signup
+        </button>
+      </p>
+    </div>
+    <div class="row" *ngIf="status">
+      <div class="col m12 s12">
+        <p class="right-align">
+          {{status}}
+        </p>
+      </div>
+    </div>
+  </form>
+</mat-card>
+<div class="back-to-login-container">
+  Already have an account? Then <a routerLink="/login">login</a>!
+</div>

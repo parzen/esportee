@@ -1,0 +1,423 @@
+<div class="tournament-container">
+  <div class="tournament-form-content">
+    <form novalidate style="width: 100%" [formGroup]="tournamentForm">
+      <div class="tournament-header-container">
+        <div class="title-container row">
+          <mat-form-field class="tournament-title-container">
+            <input type="text" matInput formControlName="name">
+            <mat-error *ngIf="tournamentForm.get('name').hasError('required') && tournamentForm.get('name').touched">
+              Title is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="tournamentForm.get('name').hasError('whitespace') && tournamentForm.get('name').touched">
+              Please enter a valid title
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="tournament-save-container">
+          <button type="submit" class="create-tournament" mat-raised-button color="primary"
+                  [disabled]="tournamentForm.invalid || hasErrors()" (click)="createTournamentOnServer(tournament)">
+            <i class="material-icons left">save</i>&nbsp;Save Tournament
+          </button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div
+          *ngIf="errors['api_error']&& errors['api_error']['critical'] && errors['api_error']['critical'].length > 0">
+          <div class="card-panel red" *ngFor="let key of errors['api_error'].keys">
+            <span class="white-text">{{errors['api_error'][key]}}</span>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row" *ngIf="!game && errors.isEmpty">
+            <div class="valign-wrapper">
+              <div class="preloader-wrapper small active valign">
+                <div class="spinner-layer spinner-green-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="valign-wrapper">
+              <div class="valign">
+                <b>Loading game data</b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-wrapper">
+          <div class="settings-stagepreview-wrapper">
+            <div class="settings-cards-wrapper">
+              <mat-card style="width: 620px">
+                <mat-card-title>Participants</mat-card-title>
+                <mat-card-subtitle>Choose if your participants should be teams or solo players.</mat-card-subtitle>
+                <mat-card-content class="participants">
+                  <div class="participants-input-container">
+                    <mat-form-field style="float:left;" type="number">
+                      <input class="number-participants" type="number" matInput formControlName="nrParticipants">
+                      <mat-error
+                        *ngIf="tournamentForm.get('nrParticipants').hasError('required') && tournamentForm.get('nrParticipants').touched">
+                        Number of participants is <strong>required</strong>
+                      </mat-error>
+                      <mat-error
+                        *ngIf="tournamentForm.get('nrParticipants').hasError('min') && tournamentForm.get('nrParticipants').touched">
+                        Number of participants must be at least 2
+                      </mat-error>
+                    </mat-form-field>
+                    <div style="float:left" class="participant-type-options">
+                      <div class="team-tournament-option"
+                           [ngClass]="{'selected':tournamentForm.get('isATeamTournament').value === false}"
+                           (click)="tournamentForm.get('isATeamTournament').setValue(false)">
+                        <mat-icon>person</mat-icon>&nbsp;Solo Players
+                      </div>
+                      <div class="user-tournament-option"
+                           [ngClass]="{'selected':tournamentForm.get('isATeamTournament').value === true}"
+                           (click)="tournamentForm.get('isATeamTournament').setValue(true)">
+                        <mat-icon>group</mat-icon>&nbsp;Teams
+                      </div>
+                    </div>
+                  </div>
+                  <div style="clear:both;"></div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card style="margin-top: 48px;width: 620px;">
+                <mat-card-title>Dates</mat-card-title>
+                <mat-card-content>
+                  <div class="start-date">
+                    <mat-form-field>
+                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1"
+                             formControlName="startDate" placeholder="Start date">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                      <mat-error
+                        *ngIf="tournamentForm.get('startDate').errors && tournamentForm.get('startDate').touched">
+                        Please enter a valid date of the format mm/dd/yyyy
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  Specify start and end date for check-in
+                  <div class="check-in">
+                    <mat-form-field>
+                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker2"
+                             formControlName="checkinDateStart" placeholder="Start check-in date">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                      <mat-error
+                        *ngIf="tournamentForm.get('checkinDateStart').errors && tournamentForm.get('checkinDateStart').touched">
+                        Please enter a valid date of the format mm/dd/yyyy
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker3"
+                             formControlName="checkinDateEnd" placeholder="End check-in date">
+                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                      <mat-datepicker #picker3></mat-datepicker>
+                      <mat-error
+                        *ngIf="tournamentForm.get('checkinDateEnd').errors && tournamentForm.get('checkinDateEnd').touched">
+                        Please enter a valid date of the format mm/dd/yyyy
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-error *ngIf="tournamentForm.hasError('checkinStartBeforeCheckinEnd')">
+                      Start check-in date has to be before end check-in date
+                    </mat-error>
+                    <mat-error *ngIf="tournamentForm.hasError('checkInDatesBeforeStartDate')">
+                      Check-in dates have to be before start date
+                    </mat-error>
+                  </div>
+                  <mat-error *ngIf="tournamentForm.hasError('wrongDates')">
+                    Start date has to be lower than end date
+                  </mat-error>
+                </mat-card-content>
+              </mat-card>
+              <mat-card style="margin-top: 48px;width: 620px;">
+                <mat-card-title>Location</mat-card-title>
+                <mat-card-content class="container settings-wrapper">
+                  <div class="network-type-options">
+                    <div class="online-option" [ngClass]="{'selected':tournamentForm.get('type').value == 'online'}"
+                         (click)="tournamentForm.get('type').setValue('online')">
+                      <mat-icon>public</mat-icon>&nbsp;online
+                    </div>
+                    <div class="offline-option" [ngClass]="{'selected':tournamentForm.get('type').value == 'offline'}"
+                         (click)="tournamentForm.get('type').setValue('offline')">
+                      <mat-icon>home</mat-icon>&nbsp;offline
+                    </div>
+                    <mat-error *ngIf="tournamentForm.get('type').invalid">
+                      This have to be either <strong>online</strong> or <strong>offline</strong>
+                    </mat-error>
+
+                    <div *ngIf="tournamentForm.get('type').value == 'offline'">
+                      <div class="address-input-container" formGroupName="address">
+                        Where will the tournament take place?
+                        <mat-form-field>
+                          <input type="text" matInput formControlName="street" placeholder="Street"
+                                 value="{{tournamentForm.get('address').get('street').value}}">
+                          <mat-error
+                            *ngIf="tournamentForm.get('address').get('street').invalid && tournamentForm.get('address').get('street').touched">
+                            Please insert a street name
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input type="text" matInput formControlName="city" placeholder="City"
+                                 value="{{tournamentForm.get('address').get('city').value}}">
+                          <mat-error
+                            *ngIf="tournamentForm.get('address').get('city').invalid && tournamentForm.get('address').get('city').touched">
+                            Please insert a city name
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input type="text" matInput formControlName="zip" placeholder="Zip"
+                                 value="{{tournamentForm.get('address').get('zip').value}}">
+                          <mat-error
+                            *ngIf="tournamentForm.get('address').get('zip').invalid && tournamentForm.get('address').get('zip').touched">
+                            Please insert a valid zip number
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input type="text" matInput formControlName="state" placeholder="State"
+                                 value="{{tournamentForm.get('address').get('state').value}}">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input type="text" matInput formControlName="country" placeholder="Country"
+                                 value="{{tournamentForm.get('address').get('country').value}}">
+                          <mat-error
+                            *ngIf="tournamentForm.get('address').get('country').invalid && tournamentForm.get('address').get('country').touched">
+                            Please insert a country name
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="venues-container">
+                        Please add all venues where games can played at the same time, where first venue has the highest priority
+                        <div formArrayName="venues"
+                              *ngFor="let venue of tournamentForm.get('venues').controls; let i = index;">
+                          <div [formGroupName]="i">
+                            <mat-form-field>
+                              <input type="text" matInput formControlName="name"
+                                      placeholder="Venue name">
+                              <mat-error *ngIf="venue.get('name').invalid && venue.get('name').touched">
+                                Please enter a venue
+                              </mat-error>
+
+                              <mat-icon (click)="venue.wantToRemove = !venue.wantToRemove" matSuffix>
+                                clear
+                              </mat-icon>
+                            </mat-form-field>
+                            <div *ngIf="venue.wantToRemove">
+                              Remove venue?
+                              <button mat-button color="warn"
+                                      (click)="removeVenue(i); venue.wantToRemove = !venue.wantToRemove">
+                                yes
+                              </button>
+                              <button mat-button color="primary"
+                                      (click)="venue.wantToRemove = !venue.wantToRemove">
+                                no
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <button mat-button color="primary" (click)="addVenue()">
+                          ADD LOCATION
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="stages-container" style="margin-top: 48px;width: 620px;">
+                <mat-card-title>Stages
+                </mat-card-title>
+
+                <mat-card-content class="row stages-configurator-container">
+                  <div class="row stage-list">
+                    <div *ngIf="tournamentForm.get('stageConfigs').controls.length === 0" class="stage-entry-container"
+                         style="color: #c3c3c3; font-size: 1.5em; padding-top: 32px;padding-bottom: 32px;">
+                      no stage yet, add one to get started
+                    </div>
+                    <div formArrayName="stageConfigs"
+                         *ngFor="let stage of tournamentForm.get('stageConfigs').controls; let i = index; let last = last;">
+                      <div [formGroupName]="i">
+                        <div class="stage-entry-container">
+                          <div class="stage-entry" style="margin-left: 80px">
+                            <div class="stage-entry-wrapper">
+                              <mat-select class="stage-type-spinner"
+                                          placeholder="Stage Type"
+                                          formControlName="stageType">
+                                <mat-option *ngFor="let type of stageTypes" [value]="type">{{readableStageType(type)}}
+                                </mat-option>
+                                <mat-error
+                                  *ngIf="stage.get('stageType').hasError('required') && stage.get('stageType').touched">
+                                  Stage Type is <strong>required</strong>
+                                </mat-error>
+                              </mat-select>
+
+                              <mat-form-field class="stage-number-participants-container">
+                                <div class="participants-label">Participants</div>
+                                <input matInput id="stage-number-participants" type="number"
+                                       formControlName="nrParticipants"/>
+                                <mat-error
+                                  *ngIf="stage.get('nrParticipants').hasError('required') && stage.get('nrParticipants').touched">
+                                  Participants count is <strong>required</strong>
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="stage.get('nrParticipants').hasError('min') && stage.get('nrParticipants').touched">
+                                  Number of participants must be at least 2
+                                </mat-error>
+                              </mat-form-field>
+                              <span class="stage-entry-remove" (click)="removeStage(i)">
+                                  <mat-icon>delete</mat-icon>
+                                </span>
+                            </div>
+
+                            <div class="advanced-wrapper">
+                              <button *ngIf="!stage.advanced" (click)="stage.advanced = !stage.advanced" color="accent"
+                                      class="stage-entry-advanced-toggle" mat-button>
+                                + advanced
+                              </button>
+                              <button *ngIf="stage.advanced" (click)="stage.advanced = !stage.advanced" color="accent"
+                                      class="stage-entry-advanced-toggle" mat-button>
+                                - advanced
+                              </button>
+                              <div *ngIf="stage.advanced">
+                                <div class="advanced-items-container">
+                                  <mat-form-field class="stage-nr-groups-container">
+                                    <input matInput id="stage-nr-groups" type="number" value="{{stage.value.nrGroups}}"
+                                           placeholder="Groups count" formControlName="nrGroups"/>
+                                    <mat-error
+                                      *ngIf="stage.get('nrGroups').hasError('required') && stage.get('nrGroups').touched">
+                                      Groups count is <strong>required</strong>
+                                    </mat-error>
+                                    <mat-error
+                                      *ngIf="stage.get('nrGroups').hasError('min') && stage.get('nrGroups').touched">
+                                      Number of groups must be at least 1
+                                    </mat-error>
+                                  </mat-form-field>
+
+                                  <mat-form-field class="stage-nr-legs-container">
+                                    <input matInput id="stage-nr-legs" type="number" value="{{stage.value.legs}}"
+                                           placeholder="Legs count" formControlName="legs"/>
+                                    <mat-error
+                                      *ngIf="stage.get('legs').hasError('required') && stage.get('legs').touched">
+                                      Legs count is <strong>required</strong>
+                                    </mat-error>
+                                    <mat-error *ngIf="stage.get('legs').hasError('min') && stage.get('legs').touched">
+                                      Number of legs must be at least 1
+                                    </mat-error>
+                                  </mat-form-field>
+                                </div>
+
+                                <mat-checkbox *ngIf="isThirdPlaceType(stage.value)" name="stage-third-place-match"
+                                              class="checkbox-third-place-match" formControlName="thirdPlaceMatch">
+                                  3rd place match
+                                </mat-checkbox>
+                                <mat-error
+                                  *ngIf="stage.get('thirdPlaceMatch').hasError('required') && stage.get('thirdPlaceMatch').touched">
+                                  Third place match is <strong>required</strong>
+                                </mat-error>
+                              </div>
+                            </div>
+
+                            <div *ngIf="getErrors(i).length > 0" class="stage-error-container">
+                              <mat-error *ngFor="let error of getErrors(i)">
+                                {{error}}
+                              </mat-error>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="arrow-container" *ngIf="!last">
+                        <mat-icon>expand_more</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button color="primary" (click)="addStage()">
+                    ADD STAGE
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+              <mat-card style="margin-bottom: 56px;margin-top: 48px;width: 620px;">
+                <mat-card-title>Custom Settings</mat-card-title>
+                <mat-card-subtitle>(optional) You can add custom settings to your tournament.</mat-card-subtitle>
+                <mat-card-content class="game-settings-container">
+                  <div formArrayName="gameSettings"
+                        *ngFor="let gameSetting of tournamentForm.get('gameSettings').controls; let i = index; let last = last;">
+                    <div [formGroupName]="i">
+                      <mat-form-field>
+                        <input type="text" matInput formControlName="value"
+                                placeholder="{{gameSetting.value.setting}}"
+                                value="{{gameSetting.value.value}}" *ngIf="!gameSetting.wantToEdit">
+                        <mat-error *ngIf="(gameSetting.get('value').hasError('required') || gameSetting.get('value').hasError('whitespace'))
+                                && gameSetting.get('value').touched">
+                          Please enter a valid value
+                        </mat-error>
+
+                        <input type="text" matInput formControlName="setting" placeholder="Game Setting"
+                                value="{{gameSetting.value.setting}}" *ngIf="gameSetting.wantToEdit">
+                        <mat-error *ngIf="(gameSetting.get('setting').hasError('required') || gameSetting.get('setting').hasError('whitespace'))
+                                            && gameSetting.get('setting').touched">
+                          Please enter a valid setting
+                        </mat-error>
+
+                        <mat-icon
+                          (click)="gameSetting.invalid ? '' : gameSetting.wantToEdit = !gameSetting.wantToEdit"
+                          matSuffix
+                          *ngIf="!gameSetting.wantToEdit">
+                          edit
+                        </mat-icon>
+                        <mat-icon
+                          (click)="gameSetting.invalid ? '' : gameSetting.wantToEdit = !gameSetting.wantToEdit"
+                          matSuffix
+                          *ngIf="gameSetting.wantToEdit">
+                          done
+                        </mat-icon>
+
+                        <mat-icon (click)="gameSetting.wantToRemove = !gameSetting.wantToRemove" matSuffix>
+                          clear
+                        </mat-icon>
+                      </mat-form-field>
+                      <div *ngIf="gameSetting.wantToRemove">
+                        Remove setting?
+                        <button mat-button color="warn"
+                                (click)="removeGameSetting(i); gameSetting.wantToRemove = !gameSetting.wantToRemove">
+                          yes
+                        </button>
+                        <button mat-button color="primary"
+                                (click)="gameSetting.wantToRemove = !gameSetting.wantToRemove">
+                          no
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button color="primary" (click)="addGameSetting()">
+                    ADD SETTING
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+            <div class="tournament-preview">
+              <div class="stages-preview" *ngIf="previewable">
+                <h3>Preview</h3>
+                <div *ngFor="let stage of stageConfigArray">
+                  <stage-preview [stage]="stage"></stage-preview>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

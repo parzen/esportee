@@ -1,0 +1,27 @@
+<div>
+  <div *ngIf="invitation">
+    <h3><a *ngIf="invitation.type < 2" routerLink="/tournament/{{invitation.tournamentConfig.id}}">{{ invitation.tournamentConfig.name }}</a></h3>
+    <h3><a *ngIf="invitation.type == 2" routerLink="/team/{{invitation.team.id}}">{{ invitation.team.name }}</a></h3>
+
+    <div *ngIf="invitation.status=='pending'">
+      <p>{{ question }}</p>
+      <button mat-button mat-raised-button color="primary" type="submit" (click)="onConfirm()">
+        <mat-icon class="material-icons">done</mat-icon>
+        Yes
+      </button>
+      <button mat-button mat-raised-button color="warn" type="submit" (click)="onDecline()">
+        <mat-icon class="material-icons">clear</mat-icon>
+        No
+      </button>
+    </div>
+
+    <div *ngIf="updatedSuccessfully" class="alert alert-success box-msg" role="alert">
+      You have successfully {{invitation.status}} to participate.
+      <a (click)="onChangeOpinion()"> Change opinion?</a>
+    </div>
+    <div *ngIf="!updatedSuccessfully && invitation.status!='pending'" class="alert alert-success box-msg" role="alert">
+      Your current status: {{invitation.status}} to participate.
+      <a (click)="onChangeOpinion()"> Change opinion?</a>
+    </div>
+  </div>
+</div>

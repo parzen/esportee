@@ -1,0 +1,27 @@
+<div>
+  <h2>Add Game Setting</h2>
+  <form novalidate [formGroup]="formGroup" class="add-gameSetting-form">
+    <mat-form-field>
+      <input type="text" placeholder="Game Setting" matInput formControlName="setting">
+      <mat-error *ngIf="formGroup.get('setting').hasError('required')">
+        Please insert a valid setting name
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Value" matInput formControlName="value">
+      <mat-error *ngIf="formGroup.get('value').hasError('required')">
+        Please insert a valid value
+      </mat-error>
+    </mat-form-field>
+
+    <div class="button-create-gameSetting-container">
+      <button mat-button mat-raised-button color="primary"
+              [disabled]="!formGroup.valid"
+              (click)="onAddGameSetting(formGroup.value, formGroup.valid)">
+        <mat-icon class="material-icons">people</mat-icon>
+        Add Game Setting
+      </button>
+    </div>
+  </form>
+</div>

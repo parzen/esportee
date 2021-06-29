@@ -1,0 +1,63 @@
+<div>
+  <h4>{{ title }}</h4>
+  <div class="container">
+      <table mdSort (mdSortChange)="sortData($event)">
+        <tr>
+          <th mat-sort-header="position">Position</th>
+          <th mat-sort-header="participant">Participant</th>
+          <th mat-sort-header="played">played</th>
+          <th mat-sort-header="won">won</th>
+          <th mat-sort-header="draw">draw</th>
+          <th mat-sort-header="lost">lost</th>
+          <th mat-sort-header="for">for</th>
+          <th mat-sort-header="against">against</th>
+          <th mat-sort-header="difference">diff</th>
+          <th mat-sort-header="points">points</th>
+        </tr>
+
+        <tr *ngFor="let tableEntry of sortedTable">
+            <td>{{tableEntry.pos+1}}</td>
+            <td *ngIf="tableEntry.id != -1 && !isATeamTournament"><a routerLink="/user/{{tableEntry.id}}">{{tableEntry.name}}</a></td>
+            <td *ngIf="tableEntry.id != -1 && isATeamTournament"><a routerLink="/team/{{tableEntry.id}}">{{tableEntry.name}}</a></td>
+            <td *ngIf="tableEntry.id == -1">{{tableEntry.name}}</td>
+            <td>{{tableEntry.played}}</td>
+            <td>{{tableEntry.won}}</td>
+            <td>{{tableEntry.draw}}</td>
+            <td>{{tableEntry.lost}}</td>
+            <td>{{tableEntry.for}}</td>
+            <td>{{tableEntry.against}}</td>
+            <td>{{tableEntry.difference}}</td>
+            <td>{{tableEntry.points}}</td>
+        </tr>
+      </table>
+  </div>
+  <div>
+    <mat-list dense>
+      <div *ngFor="let match of matches; let index = index">
+        <a routerLink="/match/{{match.id}}">
+          <div>
+            <mat-list-item>
+                Round {{match.round}} | Group {{match.bracket + 1}} |&nbsp;
+                <span *ngIf="match.venue">Venue {{match.venue.name}} |</span>
+                <span *ngFor="let opponent of match.opponents; let isLast = last">
+                  <span *ngIf="opponent.user || opponent.team; else noparticipant">
+                    <a routerLink="/user/{{opponent.user.id}}" *ngIf="opponent.user">&nbsp;{{opponent.user.username}}</a>
+                    <a routerLink="/team/{{opponent.team.id}}" *ngIf="opponent.team">&nbsp;{{opponent.team.name}}</a>
+                    <span *ngIf="match.status==MatchState.FINISHED">
+                      {{opponent.score}}
+                    </span>
+                  </span>
+                  <ng-template #noparticipant>
+                      <ng-container *ngIf="opponent.token === Emptytoken; else TBD">&nbsp;free</ng-container>
+                  </ng-template>
+                  <ng-template #TBD>&nbsp;TBD</ng-template>
+                  <span *ngIf="!isLast"> - </span>
+                </span>
+                &nbsp;| Status: {{match.status | matchStatus}}
+            </mat-list-item>
+          </div>
+        </a>
+      </div>
+    </mat-list>
+  </div>
+</div>

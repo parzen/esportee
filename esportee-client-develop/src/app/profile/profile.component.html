@@ -1,0 +1,82 @@
+<div class="profile-content">
+  <div *ngFor="let action of actions">
+    {{action.info}} | {{action.content}} | <button mat-button (click)="onApproveMatchResult(action.matchId)">approve</button> | <button mat-button (click)="onDisputeMatchResult(action.matchId)">dispute</button> | <a routerLink="/match/{{action.matchId}}">Go to match</a>
+  </div>
+
+  <mat-card>
+    <mat-card-content class="profile-overview-container">
+      <div class="profile-image-container">
+        <div class="profile-picture-container">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="button-change-picture">
+          Change
+        </div>
+      </div>
+      <div class="profile-details-container" *ngIf="user">
+        <div class="username">{{user.username}}
+          <button *ngIf="isProfile" style="margin-left:16px" class="button-profile" mat-flat-button (click)="logOut()">Sign Out</button>
+          <button *ngIf="isProfile" class="button-profile" mat-button (click)="editUser()">Edit Profile</button>
+        </div>
+        <div class="email" *ngIf="isProfile">{{user.email}}</div>
+        <div class="teams-container" *ngIf="teams">
+          <div (click)="goToTeam(team.id)" class="team" *ngFor="let team of teams">
+            Team {{team.name}}
+          </div>
+          <button mat-icon-button (click)="addTeam()" *ngIf="isProfile">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="row" *ngIf="matchesFinished">
+    <mat-card class="form-card" style="width: 640px;">
+      <mat-card-title>Matches history</mat-card-title>
+      <mat-card-content>
+        <matches-history-view *ngIf="matchesFinished"
+          [matches]="matchesFinished">
+        </matches-history-view>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="row" *ngIf="matchesFinished">
+    <mat-card class="form-card" style="width: 640px;">
+      <mat-card-title>Tournament history</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="participantStats">
+          <div *ngFor="let participantStat of participantStats">
+            <a (click)="goToTournament(participantStat.tournamentConfig.id)">{{participantStat.rank}}. place in {{participantStat.tournamentConfig.name}}</a>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="row">
+    <mat-card class="form-card" style="width: 640px;">
+      <mat-card-title>Your Tournaments</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="tournaments == null">No tournaments</div>
+        <mat-list *ngIf="tournaments" style="width: 620px;">
+          <mat-list-item (click)="goToTournament(tournament.id)" class="tournament-item"
+                         *ngFor="let tournament of tournaments">
+            <mat-icon class="material-icons" *ngIf="tournament.isATeamTournament">people</mat-icon>
+            <mat-icon class="material-icons" *ngIf="!tournament.isATeamTournament">person</mat-icon>
+            <h3 class="tournament-name" matLine>{{tournament.name}}</h3>
+            <div style="margin-top: 8px;" matLine>
+              <div style="margin-top: 2px;margin-right: 4px;"
+                   [ngClass]="{'greenDot': tournament.status === 'running','yellowDot': tournament.status === 'pending','blueDot': tournament.status === 'finished'}"></div>
+              {{tournament.status}}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <button (click)="goToTournamentList()" color="primary" mat-button>Join Tournament</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

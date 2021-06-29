@@ -1,0 +1,90 @@
+<div>
+	<mat-list *ngIf="openInvitations.length>0">
+		{{ openInvitations.length }} open invitations, wait for user confirmation:
+		<mat-list-item *ngFor="let invitation of openInvitations">
+			<a routerLink="/invitation/{{invitation.token}}">
+				<ng-template *ngIf="invitation.user.id!=-1; then showUser else showTeam"></ng-template>
+				<ng-template #showUser>{{ invitation.user.name }}</ng-template>
+				<ng-template #showTeam>{{ invitation.team.name }}</ng-template>
+			</a>
+			<button mat-icon-button color="warn" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+				<mat-icon>clear</mat-icon>
+			</button>
+			<div *ngIf="invitation.wantToRemove">
+				Remove?
+				<button mat-button color="warn" (click)="onRemove(invitation); invitation.wantToRemove = !invitation.wantToRemove">
+					yes
+				</button>
+				<button mat-button color="primary" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+					no
+				</button>
+			</div>
+		</mat-list-item>
+	</mat-list>
+	<mat-list *ngIf="openRegistrations.length>0">
+		{{ openRegistrations.length }} open registrations, need your confirmation:
+		<mat-list-item *ngFor="let invitation of openRegistrations">
+			<a routerLink="/invitation/{{invitation.token}}">
+				<ng-template *ngIf="invitation.user.id!=-1; then showUser else showTeam"></ng-template>
+				<ng-template #showUser>{{ invitation.user.name }}</ng-template>
+				<ng-template #showTeam>{{ invitation.team.name }}</ng-template>
+			</a>
+			<button mat-icon-button color="warn" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+				<mat-icon>clear</mat-icon>
+			</button>
+			<div *ngIf="invitation.wantToRemove">
+				Remove?
+				<button mat-button color="warn" (click)="onRemove(invitation); invitation.wantToRemove = !invitation.wantToRemove">
+					yes
+				</button>
+				<button mat-button color="primary" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+					no
+				</button>
+			</div>
+		</mat-list-item>
+	</mat-list>
+	<mat-list *ngIf="declinedInvitations.length>0">
+		{{ declinedInvitations.length }} declined invitations:
+		<mat-list-item *ngFor="let invitation of declinedInvitations">
+			<a routerLink="/invitation/{{invitation.token}}">
+				<ng-template *ngIf="invitation.user.id!=-1; then showUser else showTeam"></ng-template>
+				<ng-template #showUser>{{ invitation.user.name }}</ng-template>
+				<ng-template #showTeam>{{ invitation.team.name }}</ng-template>
+			</a>
+			<button mat-icon-button color="warn" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+				<mat-icon>clear</mat-icon>
+			</button>
+			<div *ngIf="invitation.wantToRemove">
+				Remove?
+				<button mat-button color="warn" (click)="onRemove(invitation); invitation.wantToRemove = !invitation.wantToRemove">
+					yes
+				</button>
+				<button mat-button color="primary" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+					no
+				</button>
+			</div>
+		</mat-list-item>
+	</mat-list>
+	<mat-list *ngIf="confirmedInvitations.length>0">
+		{{ confirmedInvitations.length }} confirmed invitations:
+		<mat-list-item *ngFor="let invitation of confirmedInvitations">
+			<a routerLink="/invitation/{{invitation.token}}">
+				<ng-template *ngIf="invitation.user.id!=-1; then showUser else showTeam"></ng-template>
+				<ng-template #showUser>{{ invitation.user.name }}</ng-template>
+				<ng-template #showTeam>{{ invitation.team.name }}</ng-template>
+			</a>
+			<button mat-icon-button color="warn" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+				<mat-icon>clear</mat-icon>
+			</button>
+			<div *ngIf="invitation.wantToRemove">
+				Remove?
+				<button mat-button color="warn" (click)="onRemove(invitation); invitation.wantToRemove = !invitation.wantToRemove">
+					yes
+				</button>
+				<button mat-button color="primary" (click)="invitation.wantToRemove = !invitation.wantToRemove">
+					no
+				</button>
+			</div>
+		</mat-list-item>
+	</mat-list>
+</div>
